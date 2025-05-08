@@ -18,17 +18,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 STATIC_URL='static/'
 STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-oq%#x9*@hq6=ss7l09zvv8#03f_fxok=c34vxc36y%azmmlvl_'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-oq%#x9*@hq6=ss7l09zvv8#03f_fxok=c34vxc36y%azmmlvl_')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -48,8 +49,8 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'whiteNoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -132,4 +133,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "https://your-frontend-app.onrender.com",  # Add your frontend URL when deployed
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True  # Only for development, remove in production
+SECURE_SSL_REDIRECT = True  # Enable SSL
+SESSION_COOKIE_SECURE = True  # Enable secure cookies
+CSRF_COOKIE_SECURE = True  # Enable secure CSRF cookie
